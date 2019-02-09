@@ -10,14 +10,14 @@ module.exports = class extends Generator {
       yosay(`Welcome to the solid ${chalk.red('generator-libfuzzer')} generator!`)
     );
 
-    const prompts = [
-      {
-        type: 'confirm',
-        name: 'someAnswer',
-        message: 'Would you like to enable this option?',
-        default: true
-      }
-    ];
+    const prompts = [{
+      type: 'input',
+      name: 'name',
+      message: 'What\'s the name of the project?',
+      default: 'fuzz'
+    }
+  ];
+
 
     return this.prompt(prompts).then(props => {
       // To access props later use this.props.someAnswer;
@@ -27,8 +27,12 @@ module.exports = class extends Generator {
 
   writing() {
     this.fs.copy(
-      this.templatePath('dummyfile.txt'),
-      this.destinationPath('dummyfile.txt')
+      this.templatePath('src/fuzz_target.cc'),
+      this.destinationPath(this.props.name + 'src/fuzz_target.cc')
+    );
+    this.fs.copy(
+      this.templatePath('Makefile'),
+      this.destinationPath(this.props.name + 'Makefile')
     );
   }
 
